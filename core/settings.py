@@ -37,7 +37,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'restaurant' # Add the name of the app you created here
+    'restaurant', # Add the name of the app you created here
+    'graphene_django', # Add this line to the list of installed apps
 ]
 
 MIDDLEWARE = [
