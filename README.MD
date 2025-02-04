@@ -48,7 +48,7 @@ El proyecto consiste en una API GraphQL que permite a los usuarios buscar restau
 - **Graphene (o Strawberry):** Para implementar GraphQL.
 - **JWT:** Para autenticación de usuarios.
 - **Celery:** Para enviar notificaciones asíncronas (correos electrónicos).
-- **MySql:** Base de datos para almacenar la información.
+- **MySql/Postgresql/Sqlite3:** Base de datos para almacenar la información.
 
 
 ---
