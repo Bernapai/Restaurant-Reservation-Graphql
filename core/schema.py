@@ -60,13 +60,82 @@ class CreateOrderMutation(graphene.Mutation):
 
 #Metodos de consulta DEL
 class DeleteRestaurantMutation(graphene.Mutation):
-    pass
+    class Arguments:
+        name = graphene.String()
+    Restaurant = graphene.Field(RestaurantType)
+
+    def mutate(self, info, name):
+        restaurant = Restaurant.objects.get(name=name)
+        restaurant.delete()
+        return DeleteRestaurantMutation(restaurant=restaurant)
 
 class DeleteTableMutation(graphene.Mutation):
-    pass
+    class Arguments:
+        number = graphene.Int()
+    Table = graphene.Field(TableType)
+
+    def mutate(self, info, number):
+        table = Table.objects.get(number=number)
+        table.delete()
+        return DeleteTableMutation(table=table)
 
 class DeleteOrderMutation(graphene.Mutation):
-    pass
+    class Arguments:
+        id = graphene.Int()
+    Order = graphene.Field(OrderType)
+
+    def mutate(self, info, id):
+        order = Order.objects.get(id=id)
+        order.delete()
+        return DeleteOrderMutation(order=order)
+
+
+
+
+
+class UpdateRestaurantMutation(graphene.Mutation):
+    class Arguments:
+        id = graphene.ID(required=True)
+        name = graphene.String()
+        description = graphene.String()
+    Restaurant = graphene.Field(RestaurantType)
+    def mutation(self, info, id ,name, description):
+        restaurant = Restaurant.objects.get(pk=id)
+        restaurant.name = name
+        restaurant.description = description
+        restaurant.save()
+        return UpdateRestaurantMutation(restaurant=restaurant)
+
+class UpdateTableMutation(graphene.Mutation):
+    class Arguments:
+        id = graphene.ID(required=True)
+        number = graphene.Int()
+        restaurant = graphene.String()
+        quantity = graphene.Int()
+    Table = graphene.Field(TableType)
+    def mutation(self, info, id ,number, restaurant, quantity):
+        table = Table.objects.get(pk=id)
+        table.number = number
+        table.restaurant = restaurant
+        table.quantity = quantity
+        table.save()
+        return UpdateTableMutation(table=table)
+
+class UpdateOrderMutation(graphene.Mutation):
+    class Arguments:
+        id = graphene.ID(required=True)
+        table = graphene.Int()
+        restaurant = graphene.String()
+        order_time = graphene.String()
+    Order = graphene.Field(OrderType)
+    def mutation(self, info, id ,table, restaurant, order_time):
+        order = Order.objects.get(pk=id)
+        order.table = table
+        order.restaurant = restaurant
+        order.order_time = order_time
+        order.save()
+        return UpdateOrderMutation(order=order)
+
 
 
 
@@ -114,6 +183,9 @@ class Mutation(graphene.ObjectType):
     DeleteRestaurant = DeleteRestaurantMutation.Field()
     DeleteTable = DeleteTableMutation.Field()
     DeleteOrder = DeleteOrderMutation.Field()
+    UpdateRestaurant = UpdateRestaurantMutation.Field()
+    UpdateTable = UpdateTableMutation.Field()
+    UpdateOrder = UpdateOrderMutation.Field()
     
 
 schema = graphene.Schema(query=Query)
