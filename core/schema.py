@@ -58,6 +58,21 @@ class CreateOrderMutation(graphene.Mutation):
 
 
 
+#Metodos de consulta DEL
+class DeleteRestaurantMutation(graphene.Mutation):
+    pass
+
+class DeleteTableMutation(graphene.Mutation):
+    pass
+
+class DeleteOrderMutation(graphene.Mutation):
+    pass
+
+
+
+
+
+
 class Query(graphene.ObjectType):
     hello = graphene.String(name=graphene.String(default_value="stranger"))
     all_restaurants = graphene.List(RestaurantType)
@@ -96,5 +111,9 @@ class Mutation(graphene.ObjectType):
     CreateRestaurant = CreateRestaurantMutation.Field()
     CreateTable = CreateTableMutation.Field()
     CreateOrder = CreateOrderMutation.Field()
+    DeleteRestaurant = DeleteRestaurantMutation.Field()
+    DeleteTable = DeleteTableMutation.Field()
+    DeleteOrder = DeleteOrderMutation.Field()
+    
 
 schema = graphene.Schema(query=Query)
