@@ -1,19 +1,19 @@
 import graphene
-from graphene_django.types import DjangoObjectType
+from graphene_django import DjangoObjectType
 from restaurant.models import Restaurant, Table, Order    
 
-class RestaurantType(graphene.DjangoObjectType):
-    class meta:
+class RestaurantType(DjangoObjectType):
+    class Meta:
         model = Restaurant
         fields = ("name", "description")
 
-class TableType(graphene.DjangoObjectType):
-    class meta:
+class TableType(DjangoObjectType):
+    class Meta:
         model = Table
         fields = "__all__"
 
-class OrderType(graphene.DjangoObjectType):
-    class meta:
+class OrderType(DjangoObjectType):
+    class Meta:
         model = Order
         fields = "__all__"
 
@@ -99,7 +99,7 @@ class UpdateRestaurantMutation(graphene.Mutation):
         name = graphene.String()
         description = graphene.String()
     Restaurant = graphene.Field(RestaurantType)
-    def mutation(self, info, id ,name, description):
+    def mutate(self, info, id ,name, description):
         restaurant = Restaurant.objects.get(pk=id)
         restaurant.name = name
         restaurant.description = description
@@ -113,7 +113,7 @@ class UpdateTableMutation(graphene.Mutation):
         restaurant = graphene.String()
         quantity = graphene.Int()
     Table = graphene.Field(TableType)
-    def mutation(self, info, id ,number, restaurant, quantity):
+    def mutate(self, info, id ,number, restaurant, quantity):
         table = Table.objects.get(pk=id)
         table.number = number
         table.restaurant = restaurant
@@ -128,7 +128,7 @@ class UpdateOrderMutation(graphene.Mutation):
         restaurant = graphene.String()
         order_time = graphene.String()
     Order = graphene.Field(OrderType)
-    def mutation(self, info, id ,table, restaurant, order_time):
+    def mutate(self, info, id ,table, restaurant, order_time):
         order = Order.objects.get(pk=id)
         order.table = table
         order.restaurant = restaurant
