@@ -1,6 +1,9 @@
 import graphene
 from graphene_django import DjangoObjectType
 from restaurant.models import Restaurant, Table, Order    
+from graphql_jwt.decorators import login_required
+import graphql_jwt
+
 
 class RestaurantType(DjangoObjectType):
     class Meta:
@@ -24,10 +27,13 @@ class CreateRestaurantMutation(graphene.Mutation):
     class Arguments:
         name = graphene.String()
         description = graphene.String()
-    Restaurant = graphene.Field(RestaurantType)
-    
-    def mutate(self, info, name, description):
-        restaurant = Restaurant(name=name, description=description)
+        opening_time = graphene.String()
+        closing_time = graphene.String()
+    restaurant = graphene.Field(RestaurantType)
+
+    @login_required
+    def mutate(self, info, name, description, opening_time, closing_time):
+        restaurant = Restaurant(name=name, description=description, opening_time=opening_time, closing_time=closing_time)
         restaurant.save()
         return CreateRestaurantMutation(restaurant=restaurant)
 
@@ -36,8 +42,8 @@ class CreateTableMutation(graphene.Mutation):
         number = graphene.Int()
         restaurant = graphene.String()
         quantity = graphene.Int()
-    Table = graphene.Field(TableType)
-    
+    table = graphene.Field(TableType)
+    @login_required
     def mutate(self, info, number, restaurant, quantity):
         table = Table(number=number, restaurant=restaurant, quantity=quantity)
         table.save()
@@ -48,8 +54,9 @@ class CreateOrderMutation(graphene.Mutation):
         table = graphene.Int()
         restaurant = graphene.String()
         order_time = graphene.String()
-    Order = graphene.Field(OrderType)
-    
+    order = graphene.Field(OrderType)
+
+    @login_required 
     def mutate(self, info, table, restaurant, order_time):
         order = Order(table=table, restaurant=restaurant, order_time=order_time)
         order.save()
@@ -62,8 +69,8 @@ class CreateOrderMutation(graphene.Mutation):
 class DeleteRestaurantMutation(graphene.Mutation):
     class Arguments:
         name = graphene.String()
-    Restaurant = graphene.Field(RestaurantType)
-
+    restaurant = graphene.Field(RestaurantType)
+    @login_required
     def mutate(self, info, name):
         restaurant = Restaurant.objects.get(name=name)
         restaurant.delete()
@@ -72,8 +79,9 @@ class DeleteRestaurantMutation(graphene.Mutation):
 class DeleteTableMutation(graphene.Mutation):
     class Arguments:
         number = graphene.Int()
-    Table = graphene.Field(TableType)
+    table = graphene.Field(TableType)
 
+    @login_required
     def mutate(self, info, number):
         table = Table.objects.get(number=number)
         table.delete()
@@ -82,8 +90,9 @@ class DeleteTableMutation(graphene.Mutation):
 class DeleteOrderMutation(graphene.Mutation):
     class Arguments:
         id = graphene.Int()
-    Order = graphene.Field(OrderType)
+    order = graphene.Field(OrderType)
 
+    @login_required
     def mutate(self, info, id):
         order = Order.objects.get(id=id)
         order.delete()
@@ -98,7 +107,9 @@ class UpdateRestaurantMutation(graphene.Mutation):
         id = graphene.ID(required=True)
         name = graphene.String()
         description = graphene.String()
-    Restaurant = graphene.Field(RestaurantType)
+    restaurant = graphene.Field(RestaurantType)
+
+    @login_required
     def mutate(self, info, id ,name, description):
         restaurant = Restaurant.objects.get(pk=id)
         restaurant.name = name
@@ -112,7 +123,9 @@ class UpdateTableMutation(graphene.Mutation):
         number = graphene.Int()
         restaurant = graphene.String()
         quantity = graphene.Int()
-    Table = graphene.Field(TableType)
+    table = graphene.Field(TableType)
+
+    @login_required
     def mutate(self, info, id ,number, restaurant, quantity):
         table = Table.objects.get(pk=id)
         table.number = number
@@ -127,7 +140,9 @@ class UpdateOrderMutation(graphene.Mutation):
         table = graphene.Int()
         restaurant = graphene.String()
         order_time = graphene.String()
-    Order = graphene.Field(OrderType)
+    order = graphene.Field(OrderType)
+
+    @login_required
     def mutate(self, info, id ,table, restaurant, order_time):
         order = Order.objects.get(pk=id)
         order.table = table
@@ -177,6 +192,9 @@ class Query(graphene.ObjectType):
 
 
 class Mutation(graphene.ObjectType):
+    token_auth = graphql_jwt.mutations.ObtainJSONWebToken.Field()  # Para obtener un token JWT
+    verify_token = graphql_jwt.mutations.Verify.Field()  # Para verificar un token JWT
+    refresh_token = graphql_jwt.mutations.Refresh.Field()  # Para refrescar un token JWT
     CreateRestaurant = CreateRestaurantMutation.Field()
     CreateTable = CreateTableMutation.Field()
     CreateOrder = CreateOrderMutation.Field()
@@ -188,4 +206,4 @@ class Mutation(graphene.ObjectType):
     UpdateOrder = UpdateOrderMutation.Field()
     
 
-schema = graphene.Schema(query=Query)
+schema = graphene.Schema(query=Query, mutation=Mutation)

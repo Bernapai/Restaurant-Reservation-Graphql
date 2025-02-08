@@ -47,7 +47,6 @@ El proyecto consiste en una API GraphQL que permite a los usuarios buscar restau
 - **Django:** Framework principal para el backend.
 - **Graphene (o Strawberry):** Para implementar GraphQL.
 - **JWT:** Para autenticación de usuarios.
-- **Celery:** Para enviar notificaciones asíncronas (correos electrónicos).
 - **MySql/Postgresql/Sqlite3:** Base de datos para almacenar la información.
 
 
