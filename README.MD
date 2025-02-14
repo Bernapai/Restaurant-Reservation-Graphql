@@ -23,8 +23,6 @@ El proyecto consiste en una API GraphQL que permite a los usuarios buscar restau
 - Registro e inicio de sesión de usuarios para realizar reservas.
 - Acceso especial para restaurantes, permitiendo gestionar mesas y reservas.
 
-### 🔔 Notificaciones
-- Confirmaciones y recordatorios de reservas enviados por correo electrónico.
 
 ---
 
@@ -61,9 +59,7 @@ El proyecto consiste en una API GraphQL que permite a los usuarios buscar restau
 - Los usuarios buscan restaurantes y verifican la disponibilidad de mesas.
 - Realizan una reserva para una fecha y hora específica.
 
-### 📧 Notificaciones
-- Al realizar una reserva, el usuario recibe una confirmación por correo electrónico.
-- Se envía un recordatorio un día antes de la reserva.
+
 
 ### ⚙️ Gestión de Restaurantes
 - Los dueños de restaurantes pueden gestionar sus mesas y ver las reservas activas.
